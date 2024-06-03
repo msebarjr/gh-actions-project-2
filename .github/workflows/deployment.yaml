@@ -10,7 +10,6 @@ env:
 jobs:
   test:
     environment: testing
-    # These values are all made up and not connected to any actual db
     env:
       MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
       MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
@@ -21,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Cache dependencies
         uses: actions/cache@v3
-        with:
+        with:  
           path: ~/.npm
           key: npm-deps-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
