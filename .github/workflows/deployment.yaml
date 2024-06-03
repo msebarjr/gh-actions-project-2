@@ -13,8 +13,8 @@ jobs:
     # These values are all made up and not connected to any actual db
     env:
       MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
-      MONGODB_USERNAME: msebarjr
-      MONGODB_PASSWORD: yankees
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
