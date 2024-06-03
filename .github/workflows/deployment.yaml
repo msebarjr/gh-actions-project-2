@@ -1,0 +1,45 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - main
+      - dev
+env:
+  MONGODB_DB_NAME: gha-demo
+  PORT: 8080
+jobs:
+  test:
+    environment: testing
+    # These values are all made up and not connected to any actual db
+    env:
+      MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
+      MONGODB_USERNAME: msebarjr
+      MONGODB_PASSWORD: yankees
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Run server
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
+      - name: Run tests
+        run: npm test
+      - name: Output information
+        run: |
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |        
+          # Will not be available in this job since it was declared in the test job
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          # Will be available in this job since it was declared at the workflow level
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
